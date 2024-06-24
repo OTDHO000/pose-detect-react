@@ -1826,6 +1826,11 @@
     "@svgr/plugin-svgo" "^5.5.0"
     "loader-utils" "^2.0.0"
 
+"@tensorflow-models/coco-ssd@^2.2.3":
+  "integrity" "sha512-iCLGktG/XhHbP6h2FWxqCKMp/Px0lCp6MZU1fjNhjDHeaWEC9G7S7cZrnPXsfH+NewCM53YShlrHnknxU3SQig=="
+  "resolved" "https://registry.npmjs.org/@tensorflow-models/coco-ssd/-/coco-ssd-2.2.3.tgz"
+  "version" "2.2.3"
+
 "@tensorflow/tfjs-backend-cpu@4.20.0":
   "integrity" "sha512-1QRQ6AqAa/VB8JOArf5nY3Dc/QQHXbfuxgdIdQhKrABEHgvlaWt2Vv696UhIlVl75YoNY+vWlCwBdGQIKYfFGw=="
   "resolved" "https://registry.npmjs.org/@tensorflow/tfjs-backend-cpu/-/tfjs-backend-cpu-4.20.0.tgz"
@@ -1844,12 +1849,12 @@
     "@types/seedrandom" "^2.4.28"
     "seedrandom" "^3.0.5"
 
-"@tensorflow/tfjs-converter@4.20.0":
+"@tensorflow/tfjs-converter@^4.10.0", "@tensorflow/tfjs-converter@4.20.0":
   "integrity" "sha512-UJ2ntQ1TNtVHB5qGMwB0j306bs3KH1E1HKJ9Dxvrc6PUaivOV+CPKqmbidOFG5LylXeRC36JBdhe+gVT2nFHNw=="
   "resolved" "https://registry.npmjs.org/@tensorflow/tfjs-converter/-/tfjs-converter-4.20.0.tgz"
   "version" "4.20.0"
 
-"@tensorflow/tfjs-core@4.20.0":
+"@tensorflow/tfjs-core@^4.10.0", "@tensorflow/tfjs-core@4.20.0":
   "integrity" "sha512-m/cc9qDc63al9UhdbXRUYTLGfJJlhuN5tylAX/2pJMLj32c8a6ThGDJYoKzpf32n5g3MQGYLchjClDxeGdXMPQ=="
   "resolved" "https://registry.npmjs.org/@tensorflow/tfjs-core/-/tfjs-core-4.20.0.tgz"
   "version" "4.20.0"

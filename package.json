@@ -14,6 +14,7 @@
     "@mediapipe/objectron": "^0.4.1636596145",
     "@mediapipe/pose": "^0.5.1635988162",
     "@mediapipe/selfie_segmentation": "^0.1.1632777926",
+    "@tensorflow-models/coco-ssd": "^2.2.3",
     "@tensorflow/tfjs": "^4.20.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",

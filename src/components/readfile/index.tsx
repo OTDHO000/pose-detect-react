@@ -39,20 +39,31 @@ const config = {
 const CSVReaderComponent: React.FC = () => {
 const [data, setData] = useState<any[]>([]);
 const embedding = new PoseEmbedding()
-const predictmodel = new PoseGame()
+const predictmodel = PoseGame;
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       Papa.parse(file, {
         complete: (result) => {
-		   const a = result.data[1] as any[]
-		   console.log(a)
+		  const a = result.data[1] as any[]
           setData(a as any[]);
-		  const floatArray: number[]=a.slice(2).map(str => parseFloat(str));
+		  const floatArray: number[]=a.slice(2,-1).map(str => parseFloat(str));
         //   const normArr = embedding.normalize_pose_landmarks(floatArray)
         //   const embeddingres = embedding.get_pose_distance_embedding(normArr)
-          predictmodel.callmodel(floatArray)
+		const poselandm = []
+		for(let i=0; i<floatArray.length; i+=3){
+			poselandm.push({
+				x:floatArray[i],
+				y:floatArray[i+1],
+				z: floatArray[i+2]
+			})
+		}
+		const normArr = embedding.normalize_pose_landmarks(poselandm)
+		console.log("after norm:", normArr)
+		const embeddingres = embedding.get_pose_distance_embedding(normArr)
+		console.log("after distance_embed:", embeddingres)
+        //   predictmodel.callmodel(floatArray)
         },
         header: false,
       });

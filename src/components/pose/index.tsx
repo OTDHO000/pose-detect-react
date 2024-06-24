@@ -84,7 +84,7 @@ const PoseContainer = () => {
     const drawGame = (poseLandmarks: NormalizedLandmarkList) => {
       if(inputVideoRef.current){
         if (canvasRef.current && contextRef.current ) {
-          gameState.current.drawGame(contextRef.current, poseLandmarks, inputVideoRef.current.videoWidth, inputVideoRef.current.videoHeight);
+          gameState.current.drawGame(inputVideoRef.current, contextRef.current, poseLandmarks, inputVideoRef.current.videoWidth, inputVideoRef.current.videoHeight);
         }
       }
       

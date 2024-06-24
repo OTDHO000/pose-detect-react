@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Basketball Detection</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
+  <style>
+    #video {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    #canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Basketball Detection with TensorFlow.js</h1>
+  <video id="video" width="640" height="480" autoplay></video>
+  <canvas id="canvas" width="640" height="480"></canvas>
+  <script>
+    async function setupCamera() {
+      const video = document.getElementById('video');
+
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { width: 640, height: 480 },
+      });
+      video.srcObject = stream;
+      return new Promise((resolve) => {
+        video.onloadedmetadata = () => {
+          resolve(video);
+        };
+      });
+    }
+
+    async function loadModel() {
+      const model = await cocoSsd.load();
+      console.log('cocoSSd model load')
+      return model;
+    }
+
+    async function detectObjects(video, model, ctx) {
+      const predictions = await model.detect(video);
+      console.log(predictions);
+      ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+      predictions.forEach(prediction => {
+        if (prediction.class === 'sports ball') {
+          console.log('Basketball detected:', prediction);
+          const [x, y, width, height] = prediction.bbox;
+          ctx.strokeStyle = 'red';
+          ctx.lineWidth = 2;
+          ctx.strokeRect(x, y, width, height);
+          ctx.font = '18px Arial';
+          ctx.fillStyle = 'red';
+          ctx.fillText(`Basketball: ${Math.round(prediction.score * 100)}%`, x, y > 10 ? y - 5 : 10);
+        }
+      });
+      requestAnimationFrame(() => detectObjects(video, model, ctx));
+    }
+
+    async function main() {
+      const video = await setupCamera();
+      const model = await loadModel();
+      const canvas = document.getElementById('canvas');
+      const ctx = canvas.getContext('2d');
+      detectObjects(video, model, ctx);
+    }
+    
+    window.onload=function(){
+        main();
+    };
+
+    
+  </script>
+</body>
+</html>

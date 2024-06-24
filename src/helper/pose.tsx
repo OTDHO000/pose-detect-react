@@ -36,15 +36,9 @@ export class PoseGame {
   }
 
 
-  weight_lefting_cal(poseLandmarks: NormalizedLandmarkList, ctx: CanvasRenderingContext2D,videoWidth:any, videoHeight:any){
+  weight_lefting_cal(vedio: HTMLVideoElement, poseLandmarks: NormalizedLandmarkList, ctx: CanvasRenderingContext2D,videoWidth:any, videoHeight:any){
 
-    const currentTime = Date.now();
-    if (currentTime - this.lastPredictionTime <= 1000) {
-      console.log("timelimit")
-      return false;
-    }
-    this.lastPredictionTime = currentTime;
-    var landmark :any= [];
+   var landmark :any= [];
     console.log("videoW&H",videoWidth,videoHeight)
     // console.log("poselm", poseLandmarks)
     let landmarkWH :any[]= JSON.parse(JSON.stringify(poseLandmarks))
@@ -76,19 +70,44 @@ export class PoseGame {
 
       let modelres:any =[];
       modelres = this.callmodel(embedding_input)
-      if(modelres[1]>0.75){ 
+
+      // const cocoDetect_res = this.poseEmbedding.cocodetect(vedio).then((data:any) =>{
+      //   console.log("data", data);
+      //   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+      //   data.forEach((prediction:any) => {
+      //     if (prediction.class === 'sports ball') {
+      //       console.log('Basketball detected:---------------');
+      //       const [x, y, width, height] = prediction.bbox;
+      //       ctx.strokeStyle = 'red';
+      //       ctx.lineWidth = 2;
+      //       ctx.strokeRect(x, y, width, height);
+      //       ctx.font = '18px Arial';
+      //       ctx.fillStyle = 'red';
+      //       ctx.fillText(`Basketball: ${Math.round(prediction.score * 100)}%`, x, y > 10 ? y - 5 : 10);
+      //     }
+      //   });
+      // }) ;
+
+
+      ctx.font = "45px Arial";
+      ctx.fillStyle = "green";
+      ctx.fillText(`counting ${this.points}`, 10, 50,);  
+
+
+
+      if(modelres[1]>0.9){ 
         ctx.font = "25px Arial";
         ctx.fillStyle = "red";
-        ctx.fillText('Up', 10, 50,);  
-        this.upflag = true   
-        console.log("up");
+        ctx.fillText('Up', 10, 80,);  
+        this.setUpDown(modelres);
+        console.log("up", this.upflag);
    
-      }else if(modelres[0]>0.75){
+      }else if(modelres[0]>0.9){
         ctx.font = "25px Arial";
-        ctx.fillStyle = "green";
-        ctx.fillText('down', 10, 50,);  
-        this.downflag = true; 
-      console.log("down");       
+        ctx.fillStyle = "red";
+        ctx.fillText('down', 10, 80,);  
+        this.setUpDown(modelres);
+        console.log("down", this.downflag);       
 
       }else{
       console.log("predicting");
@@ -97,9 +116,24 @@ export class PoseGame {
     return true;
   }
 
-    callmodel( landmark:any[]){
+  setUpDown(prediction:any[]){
+      const currentTime = Date.now();
+      if (currentTime - this.lastPredictionTime <= 100) {
+        console.log("timelimit")
+        return false;
+      }
+      this.lastPredictionTime = currentTime;
+
+      if(prediction[1]>0.9){ 
+        this.upflag=true ;
+      } if(prediction[0]>0.9&& this.upflag){
+        this.downflag =true; 
+      }
+
+  }
+
+    callmodel=( landmark:any[])=>{
       let modelres:any =[]
-      console.log("start predict---",landmark)
       const inputTensor = tf.tensor([landmark]);
       const prediction = this.poseEmbedding.predict(inputTensor);
       prediction.print();
@@ -108,7 +142,7 @@ export class PoseGame {
       return modelres;
    }
 
-  drawGame(ctx: CanvasRenderingContext2D, poseLandmarks: NormalizedLandmarkList, videoWidth:any, videoHeight: any) {
+  drawGame=(vedio: HTMLVideoElement , ctx: CanvasRenderingContext2D, poseLandmarks: NormalizedLandmarkList, videoWidth:any, videoHeight: any)=> {
 
     if (!this.status) {
       return;
@@ -116,13 +150,13 @@ export class PoseGame {
     const cellImg = document.getElementById( 'cell-img-src') as CanvasImageSource;
 
     // 
-    var success = this.weight_lefting_cal(poseLandmarks, ctx, videoWidth, videoHeight)
+    var success = this.weight_lefting_cal(vedio , poseLandmarks, ctx, videoWidth, videoHeight)
 
     if(success){
       if(this.upflag&& this.downflag){
         this.points++;
         this.upflag = false;
-        this.downflag = false;
+        this.downflag =false;
       }
       
     }else{}
